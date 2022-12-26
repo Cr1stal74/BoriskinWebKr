@@ -1,0 +1,60 @@
+﻿@page "/addpainter";
+@using BoriskinWebKr.DAO.Contexts;
+@using BoriskinWebKr.DAO.Models;
+@inject PictureDbContext _context;
+
+<PageTitle>Добавить художника</PageTitle>
+
+<h3>Введите информацию о художнике: </h3>
+
+<EditForm Model="@painter" OnSubmit="@Add">
+    <p>
+        <label>
+            Имя:
+            <InputText id="name" @bind-Value="painter.Name" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Описание:
+            <InputTextArea id="description" @bind-Value="painter.Description" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Фотография:
+            <InputFile id="pic" OnChange="@LoadFile" />
+        </label>
+    </p>
+    <p>
+        <button type="submit">Сохранить</button>
+    </p>
+</EditForm>
+
+@code {
+    private Painter painter = new();
+    private bool IsLoading = false;
+
+    private void Add()
+    {
+
+        _context.Painters.Add(painter);
+        _context.SaveChanges();
+        painter = new();
+    }
+
+    private async void LoadFile(InputFileChangeEventArgs e)
+    {
+        IsLoading = true;
+        var file = e.File;
+        var maxSize = (long)1024 * 1024 * 1024 * 20; // 20 MB
+        using var ms = new MemoryStream();
+        await file.OpenReadStream(maxSize).CopyToAsync(ms);
+        painter.Photo = ms.ToArray();
+        IsLoading = false;
+    }
+}
+
+@code {
+
+}

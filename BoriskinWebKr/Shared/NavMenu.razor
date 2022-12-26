@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BoriskinWebKr</a>
+        <a class="navbar-brand" href="">Картинная галерея</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -9,19 +9,29 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
-        <div class="nav-item px-3">
+        <div class="nav-item px-1">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="oi oi-home" aria-hidden="true"></span> Домой
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+        <div class="nav-item px-1">
+            <NavLink class="nav-link" href="pictures">
+                <span class="oi oi-list" aria-hidden="true"></span> Список картин
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+        <div class="nav-item px-1">
+            <NavLink class="nav-link" href="painters">
+                <span class="oi oi-list" aria-hidden="true"></span> Список художников
+            </NavLink>
+        </div>
+        <div class="nav-item px-1">
+            <NavLink class="nav-link" href="addpicture">
+                <span class="oi oi-plus" aria-hidden="true"></span> Добавить картину
+            </NavLink>
+        </div>
+        <div class="nav-item px-1">
+            <NavLink class="nav-link" href="addpainter">
+                <span class="oi oi-plus" aria-hidden="true"></span> Добавить художника
             </NavLink>
         </div>
     </nav>

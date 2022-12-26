@@ -1,0 +1,49 @@
+﻿@page "/painters"
+@using BoriskinWebKr.DAO.Contexts;
+@using BoriskinWebKr.DAO.Models;
+@inject PictureDbContext _context;
+
+<PageTitle>Художники</PageTitle>
+<h3>Художники: </h3>
+
+@if (_painters is null)
+{
+    <p>Загрузка...</p>
+}
+else
+{
+    <ul>
+        @foreach (var painter in _painters)
+        {
+            <li>
+                <img src="data:image/jpeg;base64, @(Convert.ToBase64String(painter.Photo))" />
+                <a href="/painters/@painter.Id"> <p align="center">@painter.Name</p> </a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    List<Painter> _painters;
+
+    protected override void OnInitialized()
+    {
+        _painters = _context.Painters.ToList();
+        base.OnInitialized();
+    }
+}
+
+<style>
+    ul {
+        margin-left: 0;
+        padding-left: 0;
+        font-size: 0;
+    }
+
+    li {
+        list-style-type: none;
+        display: inline-block;
+        width: 25%;
+        font-size: 16px;
+    }
+</style>

@@ -1,4 +1,4 @@
-﻿@page "/pictures/add"
+﻿@page "/addpicture"
 @inject PictureDbContext _dbContext;
 @using BoriskinWebKr.DAO.Contexts;
 @using BoriskinWebKr.DAO.Models;
@@ -8,27 +8,66 @@
 <h1>Заполните форму ниже для добавления картины</h1>
 
 <EditForm Model="@picture" OnSubmit="@Add">
-    <InputText id="name" @bind-Value="picture.Name" />
-    <InputText id="description" @bind-Value="picture.Name" />
-    <InputFile id="pic" OnChange="@LoadFile" />
-    <button type="submit">Сохранить</button>
+    <p>
+        <label>
+            Название:
+            <InputText id="name" @bind-Value="picture.Name" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Описание:
+            <InputTextArea id="description" @bind-Value="picture.Description" />
+        </label>
+    </p>
+    <p>
+        <label>
+            Выберите художника:
+            <InputSelect id="painter" @bind-Value="picture.PainterId">
+                @foreach(var painter in painters)
+                {
+                    <option value="@painter.Id">@painter.Name</option>
+                }
+            </InputSelect>
+        </label>
+    </p>
+    <p>
+        <label>
+            <InputFile id="pic" OnChange="@LoadFile" />
+        </label>
+    </p>
+    <p>
+        <button type="submit">Сохранить</button>
+    </p>
 </EditForm>
 
 @code {
     private Picture picture = new();
+    private bool IsLoading = false;
+    private List<Painter> painters;
+
+    protected override void OnInitialized()
+    {
+        painters = _dbContext.Painters.ToList();
+        base.OnInitialized();
+    }
 
     private void Add()
     {
+
         _dbContext.Pictures.Add(picture);
         _dbContext.SaveChanges();
+        picture = new();
     }
 
-    private void LoadFile(InputFileChangeEventArgs e)
+    private async void LoadFile(InputFileChangeEventArgs e)
     {
-        var path = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "img", Guid.NewGuid().ToString());
-        using var fs = new FileStream(path, FileMode.Create);
+        IsLoading = true;
         var file = e.File;
         var maxSize = (long)1024 * 1024 * 1024 * 20; // 20 MB
-        file.OpenReadStream(maxSize).CopyTo(fs);
+        using var ms = new MemoryStream();
+        await file.OpenReadStream(maxSize).CopyToAsync(ms);
+        picture.Content = ms.ToArray();
+        IsLoading = false;
     }
 }
